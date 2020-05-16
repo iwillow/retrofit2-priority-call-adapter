@@ -1,0 +1,2 @@
+include ':app', ':priority-call-adapter', ':priority-block-queue'
+rootProject.name='retrofit2-priority-call-adapter'
