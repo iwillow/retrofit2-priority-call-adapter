@@ -1,5 +1,7 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
+//apply plugin: 'com.novoda.bintray-release'
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
@@ -8,3 +10,13 @@ dependencies {
 
 sourceCompatibility = "8"
 targetCompatibility = "8"
+
+/*
+publish {
+    userOrg = 'iwillow'
+    groupId = 'com.iwillow'
+    artifactId = 'priority-block-queue'
+    publishVersion = '0.0.1'
+    desc = 'priority block queue.'
+    website = 'https://github.com/iwillow/retrofit2-priority-call-adapter/tree/master/priority-block-queue'
+}*/
