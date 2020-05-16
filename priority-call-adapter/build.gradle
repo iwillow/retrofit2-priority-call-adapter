@@ -48,10 +48,10 @@ sourceCompatibility = "8"
 targetCompatibility = "8"
 
 publish {
-    userOrg = 'iwillow'
-    groupId = 'com.iwillow'
-    artifactId = 'retrofit2-priority-call-adapter'
-    publishVersion = '0.0.2'
-    desc = 'A Retrofit 2 adapter for priority call.'
-    website = 'https://github.com/iwillow/retrofit2-priority-call-adapter'
+    userOrg = ORGANIZATION_ID
+    groupId = GROUP_ID
+    artifactId = RETROFIT2_PRIORITY_CALL_ADAPTER_ARTIFACT_ID
+    publishVersion = RETROFIT2_PRIORITY_CALL_ADAPTER_VERSION
+    desc = RETROFIT2_PRIORITY_CALL_ADAPTER_DESC
+    website = RETROFIT2_PRIORITY_CALL_ADAPTER_SITE
 }

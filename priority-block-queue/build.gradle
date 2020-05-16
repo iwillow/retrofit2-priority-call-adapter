@@ -12,10 +12,10 @@ sourceCompatibility = "8"
 targetCompatibility = "8"
 
 publish {
-    userOrg = 'iwillow'
-    groupId = 'com.iwillow'
-    artifactId = 'priority-block-queue'
-    publishVersion = '0.0.1'
-    desc = 'priority block queue.'
-    website = 'https://github.com/iwillow/retrofit2-priority-call-adapter/tree/master/priority-block-queue'
+    userOrg = ORGANIZATION_ID
+    groupId = GROUP_ID
+    artifactId = PRIORITY_BLOCK_QUEUE_ARTIFACT_ID
+    publishVersion = PRIORITY_BLOCK_QUEUE_VERSION
+    desc = PRIORITY_BLOCK_QUEUE_ARTIFACT_DESC
+    website = PRIORITY_BLOCK_QUEUE_ARTIFACT_DESC_SITE
 }
