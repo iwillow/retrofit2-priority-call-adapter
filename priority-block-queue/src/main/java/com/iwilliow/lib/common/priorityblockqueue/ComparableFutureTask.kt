@@ -36,7 +36,7 @@ class ComparableFutureTask<V> : FutureTask<V>, Comparable<ComparableFutureTask<V
         mLowerPriorityFirst = lowerPriorityFirst
     }
 
-    override fun compareTo(o: ComparableFutureTask<V>): Int {
-        return if (mLowerPriorityFirst) priority - o.priority else o.priority - priority
+    override fun compareTo(other: ComparableFutureTask<V>): Int {
+        return if (mLowerPriorityFirst) priority - other.priority else other.priority - priority
     }
 }
