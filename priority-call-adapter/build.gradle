@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.novoda.bintray-release'
+apply from: rootProject.file('gradle/bintray-key.gradle')
 
 android {
     compileSdkVersion 29
@@ -37,7 +38,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "com.squareup.retrofit2:retrofit:2.8.1"
-    api 'com.iwillow:priority-block-queue:0.0.1'
+    api 'com.iwillow:priority-block-queue:0.0.6'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
@@ -54,4 +55,7 @@ publish {
     publishVersion = RETROFIT2_PRIORITY_CALL_ADAPTER_VERSION
     desc = RETROFIT2_PRIORITY_CALL_ADAPTER_DESC
     website = RETROFIT2_PRIORITY_CALL_ADAPTER_SITE
+    dryRun = Boolean.valueOf(DRY_RUN)
+    bintrayUser = getBintrayAuthUser()
+    bintrayKey = getBintrayAuthKey()
 }

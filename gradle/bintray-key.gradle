@@ -1,0 +1,22 @@
+def getBintrayAuthUser() {
+    return hasProperty('BINTRAY_AUTH_USER') ? BINTRAY_AUTH_USER : readFromLocalProperty('BINTRAY_AUTH_USER')
+}
+
+def getBintrayAuthKey() {
+    return hasProperty('BINTRAY_AUTH_KEY') ? BINTRAY_AUTH_KEY : readFromLocalProperty('BINTRAY_AUTH_KEY')
+}
+
+def readFromLocalProperty(String key) {
+    Properties properties = new Properties()
+    try {
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    } catch (Exception e) {
+        println("load local properties failed msg:${e.message}")
+    }
+    return properties.getProperty(key)
+}
+
+ext {
+    getBintrayAuthUser = this.&getBintrayAuthUser
+    getBintrayAuthKey = this.&getBintrayAuthKey
+}

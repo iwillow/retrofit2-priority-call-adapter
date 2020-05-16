@@ -1,6 +1,7 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
 apply plugin: 'com.novoda.bintray-release'
+apply from: rootProject.file('gradle/bintray-key.gradle')
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -18,4 +19,7 @@ publish {
     publishVersion = PRIORITY_BLOCK_QUEUE_VERSION
     desc = PRIORITY_BLOCK_QUEUE_ARTIFACT_DESC
     website = PRIORITY_BLOCK_QUEUE_ARTIFACT_DESC_SITE
+    dryRun = Boolean.valueOf(DRY_RUN)
+    bintrayUser = getBintrayAuthUser()
+    bintrayKey = getBintrayAuthKey()
 }
