@@ -12,7 +12,7 @@ val retrofit = Retrofit.Builder()
 	.addConverterFactory(GsonConverterFactory.create())
      // can only run single one task at the same time order by priority
      .addCallAdapterFactory(PriorityBlockCallAdapterFactory.create())
-     // can only run single 5 tasks at the same time  order by priority
+     // can  run  5 tasks at the same time  order by priority
      //.addCallAdapterFactory(PriorityBlockCallAdapterFactory.create(5))
     .build()
 ```
@@ -32,7 +32,7 @@ interface MyService {
     ): PriorityBlockCall<String?>
 
 
-	@GET("repos/{owner}/{repo}/contributors")
+   @GET("repos/{owner}/{repo}/contributors")
     fun contributors2(
         @Path("owner") owner: String?,
         @Path("repo") repo: String?
