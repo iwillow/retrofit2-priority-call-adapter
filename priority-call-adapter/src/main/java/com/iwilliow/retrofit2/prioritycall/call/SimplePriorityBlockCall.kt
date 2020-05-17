@@ -1,6 +1,8 @@
 package com.iwilliow.retrofit2.prioritycall.call
 
+import android.util.Log
 import com.iwilliow.lib.common.priorityblockqueue.PriorityExecutorService
+import com.iwilliow.retrofit2.prioritycall.BuildConfig
 import com.iwilliow.retrofit2.prioritycall.annotation.Priorities
 import okhttp3.Request
 import retrofit2.Call
@@ -25,6 +27,8 @@ class SimplePriorityBlockCall<T>(
     private var mFuture: Future<ResponseWrapper<T>>? = null
     @Volatile
     private var mCanceled = false
+    @Volatile
+    private var mExecuted = false
 
     @Throws(Throwable::class)
     override fun executeBlockCall(): Response<T>? {
@@ -33,45 +37,66 @@ class SimplePriorityBlockCall<T>(
 
     @Throws(Throwable::class)
     override fun executeBlockCall(@Priorities priority: Int): Response<T>? {
-        if (mFuture == null) {
-            synchronized(this) {
-                if (mFuture == null) {
-                    mFuture = mPriorityTaskExecutor.submitCallable(
-                        priority,
-                        Callable { processCall(null, false) }
-                    )
+        if (mExecuted) throw IllegalStateException("Already executed.")
+        else {
+            mExecuted = true
+            if (mFuture == null) {
+                synchronized(this) {
+                    if (mFuture == null) {
+                        mFuture = mPriorityTaskExecutor.submitCallable(
+                            priority,
+                            Callable { processCall(null, false, priority) }
+                        )
+                    }
                 }
             }
+            val wrapper = mFuture!!.get()
+            return wrapper.response ?: throw wrapper.throwable!!
         }
-        val wrapper = mFuture!!.get()
-        return wrapper.response ?: throw wrapper.throwable!!
+
     }
 
-    override fun enqueueBlockCall(callback: Callback<T>?): PriorityBlockCall<T> {
+    override fun enqueueBlockCall(callback: Callback<T>?) {
         return enqueueBlockCall(mPriority, callback)
     }
 
-    override fun enqueueBlockCall(@Priorities priority: Int, callback: Callback<T>?): PriorityBlockCall<T> {
-        mPriorityTaskExecutor.executeRunnable(priority, Runnable { processCall(callback, true) })
-        return this
+    override fun enqueueBlockCall(@Priorities priority: Int, callback: Callback<T>?) {
+        if (mExecuted) {
+            failedCallback(delegateCall, IllegalStateException("Already executed."), callback)
+        } else {
+            mExecuted = true
+            mPriorityTaskExecutor.executeRunnable(
+                priority,
+                Runnable { processCall(callback, true, priority) })
+        }
+
     }
 
-    private fun processCall(asyncCallback: Callback<T>?, async: Boolean): ResponseWrapper<T> {
-        val result: ResponseWrapper<T>
-        val call: Call<T> = if (async) { //异步调用
+    private fun processCall(
+        asyncCallback: Callback<T>?,
+        async: Boolean,
+        priority: Int
+    ): ResponseWrapper<T> {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "start processing priority:$priority task")
+        }
+        val call: Call<T> = if (async) { //async call
             cloneBlockCall().delegateCall
-        } else { //同步调用
+        } else { //sync call
             delegateCall.clone()
         }
-        result = try {
+        return (try {
             val response = call.execute()
             successCallback(call, response, asyncCallback)
             ResponseWrapper(response, null)
         } catch (e: IOException) {
             failedCallback(call, e, asyncCallback)
-            ResponseWrapper(null, e)
+            ResponseWrapper<T>(null, e)
+        }).also {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "finish processing priority:$priority task")
+            }
         }
-        return result
     }
 
     private fun successCallback(call: Call<T>, response: Response<T>, callback: Callback<T>?) {
@@ -92,7 +117,7 @@ class SimplePriorityBlockCall<T>(
     }
 
     override val isBlockCallExecuted: Boolean
-        get() = delegateCall.isExecuted
+        get() = delegateCall.isExecuted || mExecuted
 
     override fun cancelBlockCall() {
         mCanceled = true
@@ -119,8 +144,7 @@ class SimplePriorityBlockCall<T>(
         val throwable: Throwable?
     )
 
-    companion object {
-        private const val TAG = "SimplePriorityBlockCall"
+    private companion object {
+        const val TAG = "SimplePriorityBlockCall"
     }
-
 }

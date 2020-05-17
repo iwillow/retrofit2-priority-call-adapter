@@ -3,6 +3,7 @@ package com.iwilliow.retrofit2.prioritycall.adapter
 import android.os.Handler
 import android.os.Looper
 import com.iwilliow.lib.common.priorityblockqueue.PriorityExecutorService
+import com.iwilliow.lib.common.priorityblockqueue.PriorityExecutors.newFixedThreadPool
 import com.iwilliow.lib.common.priorityblockqueue.PriorityExecutors.newSingleThreadExecutor
 import com.iwilliow.lib.common.priorityblockqueue.TaskPriority
 import com.iwilliow.retrofit2.prioritycall.annotation.Priority
@@ -66,13 +67,21 @@ class PriorityBlockCallAdapterFactory private constructor(
             )
         }
 
+        @JvmStatic
+        fun create(nThread: Int): PriorityBlockCallAdapterFactory {
+            return PriorityBlockCallAdapterFactory(
+                newFixedThreadPool(false, nThread),
+                sCallbackExecutor
+            )
+        }
+
         /**
-         * 针对Glive的串行队列，由Executor维护任务的存取
+         * single priority block call
          */
         @JvmStatic
         private val sTaskExecutor = newSingleThreadExecutor()
         /**
-         * 接口回调所在线程
+         * the callback's  Executor
          */
         @JvmStatic
         private val sCallbackExecutor: Executor = MainThreadExecutor()
