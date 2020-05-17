@@ -37,7 +37,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     //api project(path: ':priority-call-adapter')
-    implementation 'com.iwillow:retrofit2-priority-call-adapter:0.0.6'
+    implementation 'com.iwillow:retrofit2-priority-call-adapter:0.0.7'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.4.0'
     implementation "com.squareup.retrofit2:retrofit:2.8.1"

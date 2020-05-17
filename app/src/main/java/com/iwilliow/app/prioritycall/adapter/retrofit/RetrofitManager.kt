@@ -9,9 +9,12 @@ class RetrofitManager private constructor() {
     val mRetrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl("https://api.github.com/")
-            .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            // can only run single one task at the same time order by priority
             .addCallAdapterFactory(PriorityBlockCallAdapterFactory.create())
+             // can only run single 5 tasks at the same time  order by priority
+            .addCallAdapterFactory(PriorityBlockCallAdapterFactory.create(5))
             .build()
     }
 

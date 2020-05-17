@@ -19,11 +19,13 @@ interface SampleApi {
         @Path("repo") repo: String?
     ): PriorityBlockCall<String?>
 
+    @GET("repos/{owner}/{repo}/contributors")
+    fun contributors2(
+        @Path("owner") owner: String?,
+        @Path("repo") repo: String?
+    ): PriorityBlockCall<String?>
 
-    @Priority(
-        value = TaskPriority.PRIORITY_VERY_HIGH,
-        description = "getTop250"
-    )
+
     @GET("https://douban.uieee.com/v2/movie/top250")
     fun getTop250(): PriorityBlockCall<String?>
 

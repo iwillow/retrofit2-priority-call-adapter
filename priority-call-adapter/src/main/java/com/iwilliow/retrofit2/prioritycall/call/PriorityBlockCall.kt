@@ -31,7 +31,7 @@ interface PriorityBlockCall<T> {
     @Throws(Throwable::class)
     fun executeBlockCall(@Priorities priority: Int): Response<T>?
 
-    fun enqueueBlockCall(callback: Callback<T>?): PriorityBlockCall<T>
+    fun enqueueBlockCall(callback: Callback<T>?)
     /**
      * Asynchronously send the request and notify `callback` of its response or if an error
      * occurred talking to the server, creating the request, or processing the response.
@@ -39,7 +39,7 @@ interface PriorityBlockCall<T> {
      * @param priority
      * @param callback
      */
-    fun enqueueBlockCall(@Priorities priority: Int, callback: Callback<T>?): PriorityBlockCall<T>
+    fun enqueueBlockCall(@Priorities priority: Int, callback: Callback<T>?)
 
     /**
      * Returns true if this call has been either [executed][.executeBlockCall] or [ ][.enqueueBlockCall]. It is an error to execute or enqueue a call more than once.
@@ -92,7 +92,31 @@ inline fun <T> PriorityBlockCall<T>.onFailure(
 ) = enqueueBlockCall(onFailure = action)
 
 inline fun <T> PriorityBlockCall<T>.enqueueBlockCall(
-    @Priorities priority: Int = TaskPriority.PRIORITY_DEFAULT,
+    crossinline onResponse: (
+        call: Call<T>?,
+        response: Response<T?>
+    ) -> Unit = { _, _ -> },
+    crossinline onFailure: (
+        call: Call<T>?,
+        t: Throwable
+    ) -> Unit = { _, _ -> }
+) {
+    enqueueBlockCall(
+        object : Callback<T> {
+
+            override fun onResponse(call: Call<T>?, response: Response<T?>) {
+                onResponse.invoke(call, response)
+            }
+
+            override fun onFailure(call: Call<T>?, t: Throwable) {
+                onFailure.invoke(call, t)
+            }
+        })
+}
+
+
+inline fun <T> PriorityBlockCall<T>.enqueueBlockCall(
+    @Priorities priority: Int,
     crossinline onResponse: (
         call: Call<T>?,
         response: Response<T?>
