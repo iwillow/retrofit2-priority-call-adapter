@@ -71,9 +71,10 @@ retrofit.create(MyService::class.java)
             .executeBlockCall(TaskPriority.PRIORITY_HIGH)
 ```
 
-[ ![Download](https://api.bintray.com/packages/iwillow/maven/retrofit2-priority-call-adapter/images/download.svg) ](https://bintray.com/iwillow/maven/retrofit2-priority-call-adapter/_latestVersion)
+Download
 --------
- Gradle
+the latest version  [ ![Download](https://api.bintray.com/packages/iwillow/maven/retrofit2-priority-call-adapter/images/download.svg) ](https://bintray.com/iwillow/maven/retrofit2-priority-call-adapter/_latestVersion)
+Gradle
 ```groovy
 buildscript {
  repositories {
