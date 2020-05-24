@@ -80,18 +80,16 @@ buildscript {
  repositories {
     google()
     jcenter()
-    maven { url 'https://dl.bintray.com/iwillow/maven' }
   }
 }
 allprojects {
     repositories {
     google()
     jcenter()
-    maven { url 'https://dl.bintray.com/iwillow/maven' }
   }
 }
 dependencies {
-   implementation 'com.iwillow:retrofit2-priority-call-adapter:0.0.7'
+   implementation 'com.iwillow:retrofit2-priority-call-adapter:0.0.8'
 }
 ```
 License
